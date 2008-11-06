@@ -2,7 +2,6 @@ package com.sikelianos {
   import flash.display.*
   import flash.geom.*
   import flash.events.*
-	import flash.filters.*
   import com.sikelianos.*
   import fl.transitions.easing.Regular
 
@@ -18,35 +17,32 @@ package com.sikelianos {
     var stretch:Number
     var left_edge:Number
     var right_edge:Number
+    var currently_flipping:Boolean = false
+    var current_face:String = "front"
     
-    // Parameters
+    // Settings
     var flip_time:Number // total time to flip clip, in seconds
     var vertical_stretchiness:Number // 0 is none, 1 is too much
     var circular_flipping:Boolean // if set to false, clip will flip back and forth
-    var drop_shadow:Boolean
     
-    public function Flipper($front, $back, $flip_time=.5, $vertical_stretchiness=.3, $circular_flipping=true, $drop_shadow=true) {
+    public function Flipper($front, $back, $flip_time=.5, $vertical_stretchiness=.3, $circular_flipping=true) {
       front = $front
       back = $back
       flip_time = $flip_time
       vertical_stretchiness = $vertical_stretchiness
       circular_flipping = $circular_flipping
-      drop_shadow = $drop_shadow
       addEventListener(Event.ADDED_TO_STAGE, init)
     }
 
     public function init(e:Event) {      
-      x = y = 100
-      
-      useHandCursor = true;
       buttonMode = true;
-      addEventListener(MouseEvent.CLICK, startFlipToBack)
+      useHandCursor = true;
+
+      addChild(front)
+      addChild(back);
       
       front_holder = new MovieClip();
       back_holder = new MovieClip();
-      
-      addChild(front)
-      addChild(back);
       addChild(front_holder);
       addChild(back_holder);
       back_holder.visible = false
@@ -69,40 +65,34 @@ package com.sikelianos {
       // Front tweener starts off flat. Back tweener starts of tweaked
       front_tweener = new DistortionTweener(front_holder, front, new Point(0, 0), new Point(w, 0), new Point(w, h), new Point(0, h), 5)
       back_tweener = new DistortionTweener(back_holder, back, new Point(left_edge, stretch), new Point(right_edge, -stretch), new Point(right_edge, h+stretch), new Point(left_edge, h-stretch), 5)
-      
-      if (drop_shadow) { dropShadow() }
     }
-    
-		private function dropShadow() {
-      var color:Number = 0x000000;
-      var angle:Number = 45;
-      var alpha:Number = 1;
-      var blurX:Number = 7;
-      var blurY:Number = 7;
-      var distance:Number = 6;
-      var strength:Number = 0.5;
-      var inner:Boolean = false;
-      var knockout:Boolean = false;
-      var quality:Number = BitmapFilterQuality.HIGH;
-      var s:DropShadowFilter = new DropShadowFilter(distance, angle, color, alpha, blurX, blurY, strength, quality, inner, knockout);
-      filters = [s];
-		}
 
-    public function startFlipToBack(e:MouseEvent) {
-      removeEventListener(MouseEvent.CLICK, startFlipToBack)
+    public function flip(e:MouseEvent) {
+      if (!currently_flipping) {
+        currently_flipping = true
+        if (current_face == "front") {
+          current_face = "back"
+          startFlipToBack()
+        } else {
+          current_face = "front"
+          startFlipToFront();
+        }
+      }
+    }
+
+    private function startFlipToBack() {
       front_tweener.addEventListener(Event.COMPLETE, finishFlipToBack);
       front_tweener.tweenTo(new Point(left_edge, -stretch), new Point(right_edge, stretch), new Point(right_edge, h-stretch), new Point(left_edge, h+stretch), Regular.easeIn, flip_time/2);
     }
     
-    public function finishFlipToBack(e:Event):void {
+    private function finishFlipToBack(e:Event):void {
       swapFrontAndBackVisibility();
       front_tweener.removeEventListener(Event.COMPLETE, finishFlipToBack);
       back_tweener.tweenTo(new Point(0, 0), new Point(w, 0), new Point(w, h), new Point(0, h), Regular.easeOut, flip_time/2);
       back_tweener.addEventListener(Event.COMPLETE, enableFrontFlipping);
     }
     
-    public function startFlipToFront(e:MouseEvent) {
-      removeEventListener(MouseEvent.CLICK, startFlipToFront)
+    private function startFlipToFront() {
       back_tweener.addEventListener(Event.COMPLETE, finishFlipToFront);
       if (circular_flipping) {
         back_tweener.tweenTo(new Point(left_edge, -stretch), new Point(right_edge, stretch), new Point(right_edge, h-stretch), new Point(left_edge, h+stretch), Regular.easeIn, flip_time/2);
@@ -112,32 +102,30 @@ package com.sikelianos {
       }
     }
     
-    public function finishFlipToFront(e:Event):void {
+    private function finishFlipToFront(e:Event):void {
       swapFrontAndBackVisibility();
       back_tweener.removeEventListener(Event.COMPLETE, finishFlipToFront);
       front_tweener.tweenTo(new Point(0, 0), new Point(w, 0), new Point(w, h), new Point(0, h), Regular.easeOut, flip_time/2);
-      front_tweener.addEventListener(Event.COMPLETE, enableBackFlipping);
       if (circular_flipping) {
-        back_tweener.tweenTo(new Point(left_edge, stretch), new Point(right_edge, -stretch), new Point(right_edge, h+stretch), new Point(left_edge, h-stretch), Regular.easeIn, .001);  
+        back_tweener.tweenTo(new Point(left_edge, stretch), new Point(right_edge, -stretch), new Point(right_edge, h+stretch), new Point(left_edge, h-stretch), Regular.easeIn, .001);
       }
+      front_tweener.addEventListener(Event.COMPLETE, enableBackFlipping);
     }
         
-    public function enableFrontFlipping(e:Event) {
-      addEventListener(MouseEvent.CLICK, startFlipToFront)
-      back_tweener.removeEventListener(Event.COMPLETE, enableFrontFlipping); 
+    private function enableFrontFlipping(e:Event) {
+      currently_flipping = false
+      back_tweener.removeEventListener(Event.COMPLETE, enableFrontFlipping);
     }
     
-    public function enableBackFlipping(e:Event) {
-      addEventListener(MouseEvent.CLICK, startFlipToBack) 
-      front_tweener.removeEventListener(Event.COMPLETE, enableBackFlipping)
-      // removeEventListener(MouseEvent.CLICK, startFlipToFront)
+    private function enableBackFlipping(e:Event) {
+      currently_flipping = false
+      front_tweener.removeEventListener(Event.COMPLETE, enableBackFlipping);
     }
     
-    public function swapFrontAndBackVisibility() {
+    private function swapFrontAndBackVisibility() {
       front_holder.visible = !front_holder.visible
       back_holder.visible = !back_holder.visible
     }
     
   }
-
 }
