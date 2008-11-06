@@ -4,10 +4,14 @@ ClipFlipper is an AS3 project that allows MovieClips to be 'flipped over' horizo
 
 Clips can also optionally be tweened on a per-corner basis, giving them a more flexible look, as though they're being bent as they flip over. (Experimental)
 
+h2. Demo
+
+Sample SWF here: "http://zeke.sikelianos.com/projects/clip_flipper/clip_flipper.swf":http://zeke.sikelianos.com/projects/clip_flipper/clip_flipper.swf
+
 h2. Credits
 
-* DistortionTweener is based almost entirely on Matt Przybylski's class of the same name. See http://reintroducing.com
-* DistortImage was written by Thomas Pfeiffer. See http://flashsandy.org
+* DistortionTweener is based almost entirely on "Matt Przybylski's":http://zeke.sikelianos.com/projects/clip_flipper/clip_flipper.swf class of the same name. 
+* DistortImage was written by "Thomas Pfeiffer":http://flashsandy.org.
 
 h2. To Do
 
