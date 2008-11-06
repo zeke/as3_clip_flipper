@@ -14,8 +14,7 @@ package {
       // params: ($front, $back, $flip_time=.5, $vertical_stretchiness=.3, $circular_flipping=true)
       var flipper = new Flipper(front_clip, back_clip, .4, .3, true);
       addChild(flipper);
-      flipper.addEventListener(MouseEvent.ROLL_OVER, flipper.flip)
-      flipper.addEventListener(MouseEvent.ROLL_OUT, flipper.flip)
+      flipper.addEventListener(MouseEvent.CLICK, flipper.flip)
       flipper.x = flipper.y = 100
 
       dropShadow();

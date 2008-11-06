@@ -1,12 +1,12 @@
 h1. ClipFlipper
 
-ClipFlipper is an AS3 project that allows MovieClips to be 'flipped over' horizontally, much like OS X's Dashboard widgets. Options include flipping speed, flipping style (circular and back-and-forth), and optional dropshadow.
+ClipFlipper is an AS3 project that allows MovieClips to be 'flipped over' horizontally, much like OS X's Dashboard widgets. Options include flipping speed, vertical stretchiness, and flipping mode (circular or back-and-forth).
 
 Clips can also optionally be tweened on a per-corner basis, giving them a more flexible look, as though they're being bent as they flip over. (Experimental)
 
 h2. Demo
 
-Sample SWF here: "http://zeke.sikelianos.com/projects/clip_flipper/clip_flipper.swf":http://zeke.sikelianos.com/projects/clip_flipper/clip_flipper.swf
+Check our a working example at: "http://zeke.sikelianos.com/projects/clip_flipper/":http://zeke.sikelianos.com/projects/clip_flipper/
 
 h2. Credits
 
