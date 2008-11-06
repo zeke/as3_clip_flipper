@@ -1,0 +1,15 @@
+h1. ClipFlipper
+
+ClipFlipper is an AS3 project that allows MovieClips to be 'flipped over' horizontally, much like OS X's Dashboard widgets. Options include flipping speed, flipping style (circular and back-and-forth), and optional dropshadow.
+
+Clips can also optionally be tweened on a per-corner basis, giving them a more flexible look, as though they're being bent as they flip over. (Experimental)
+
+h2. Credits
+
+* DistortionTweener is based almost entirely on Matt Przybylski's class of the same name. See http://reintroducing.com
+* DistortImage was written by Thomas Pfeiffer. See http://flashsandy.org
+
+h2. To Do
+
+* Add vertical flipping functionality
+* Improve upon the newly added per-corner tweening methods
